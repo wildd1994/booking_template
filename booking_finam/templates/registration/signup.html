@@ -1,0 +1,20 @@
+{% extends 'default.html' %}
+
+{% block content %}
+
+<form method="post" action="{% url 'create_user' %}" style="display: flex; justify-content: center">
+{% csrf_token %}
+    <div class="mb-3">
+        {% for field in form %}
+            <div class="fieldWrapper" style="justify-content: space-between; display: flex; margin: 20px 20px; width: 100%">
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+            </div>
+        {% endfor %}
+        <div  style="display: flex; width: 100%; justify-content: center">
+            <button type="submit" class="btn btn-primary">Регистрация</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
