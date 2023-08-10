@@ -1,0 +1,15 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'default.html' %}
+
+<!-- Название у нас будет Product -->
+{% block title %}
+Бронирование
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+{% block content %}
+<h1>{{ booking }}</h1>
+
+<a href="{{booking.id}}/edit">Изменить</a>
+<a href="{{booking.id}}/delete">Удалить</a>
+{% endblock content %}
