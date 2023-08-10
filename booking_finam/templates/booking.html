@@ -1,15 +1,17 @@
-<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+<!--  наследуемся от шаблона default.html -->
 {% extends 'default.html' %}
 
-<!-- Название у нас будет Product -->
 {% block title %}
 Бронирование
 {% endblock title %}
 
-<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
 {% block content %}
-<h1>{{ booking }}</h1>
 
-<a href="{{booking.id}}/edit">Изменить</a>
-<a href="{{booking.id}}/delete">Удалить</a>
+<form action="{% url 'booking_create' %}" method="GET">
+
+    <div  style="display: flex; width: 100%; justify-content: center">
+        <button type="submit" class="btn btn-primary">Далее</button>
+    </div>
+
+</form>
 {% endblock content %}
