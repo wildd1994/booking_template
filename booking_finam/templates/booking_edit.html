@@ -1,11 +1,106 @@
 {% extends 'default.html' %}
 
 {% block content %}
-<h1>Товар</h1>
-<hr>
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save" />
-</form>
+<h1>Бронирование</h1>
+
+
+
+<div class="d-flex flex-column" style="align-items: center" >
+    <form method="POST">
+        {% csrf_token %}
+        <p class="d-flex flex-column">
+            <label class="form-label"  for="who_booked">К кому запись:</label>
+            <select id="who_booked" class="form-select", name="who_booked">
+                <option value="{{ booking.who_booked.id }}">{{ booking.who_booked.first_name }} {{ booking.who_booked.last_name }}</option>
+                {% for people in bookings_people%}
+                    <option value="{{ people.id }}">{{ people.first_name }} {{ people.last_name }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label class="form-label"  for="date_booking">Дата бронирования</label><br>
+            <input class="form-control" type="date" id="date_booking" name="date_booking" min="{{ today }}" value="{{ booking.date_booking|date:'Y-m-d' }}" />
+            {{ errors.date_booking }}
+        </p>
+        <p>
+        <label class="form-label"  for="start_time_booking">Время начала:</label>
+            <input type="time" class="form-control" value="" name="start_time_booking" id="start_time_booking"/>
+            {{ errors.start_time_booking }}
+        </p>
+        <p>
+            <label class="form-label"  for="end_time_booking">Время окончания:</label>
+            <input type="time" class="form-control" value="" name="end_time_booking" id="end_time_booking"/>
+            {{ errors.end_time_booking }}
+        </p>
+        <p>
+            <label class="form-label" for="description">Дополнительные сведения:</label>
+            <textarea class="form-control" rows="5" id="description" name="description">{{ booking.description }}</textarea>
+            {{ errors.description }}
+        </p>
+        <button  id="buttonId" type="submit" class="btn btn-primary">Изменить</button>
+    </form>
+</div>
+<input type="hidden" id="booking_id" name="booking_id" value="{{ booking_id }}" />
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous">
+</script>
+<script>
+    $(document).ready(function () {
+        // catch the form's submit event
+        $('#date_booking').on('change', function () {
+            funcVal()
+            console.log('тригер даты')
+        });
+        $('#who_booked').on('change', function () {
+            funcVal()
+            console.log('тригер чувака')
+        });
+        $('#start_time_booking').on('change', function () {
+            funcVal()
+            console.log('тригер времени старта')
+        });
+        $('#end_time_booking').on('change', function () {
+            funcVal()
+            console.log('тригер времени окончания')
+        });
+    })
+
+    const funcVal = () => {
+            const start_time_booking = $('#start_time_booking').val()
+            const end_time_booking = $('#end_time_booking').val()
+            const date_booking = $('#date_booking').val()
+            const who_booked = $('#who_booked').val()
+            const booking_id = $('#booking_id').val()
+            console.log(start_time_booking, end_time_booking, date_booking, who_booked, booking_id)
+            // create an AJAX call
+            $.ajax({
+                data: {
+                    start_time_booking: start_time_booking,
+                    end_time_booking: end_time_booking,
+                    date_booking: date_booking,
+                    who_booked: who_booked,
+                    booking_id: booking_id
+                },
+                url: "{% url 'validate_username' %}",
+                // on success
+                success: function (response) {
+                    if (response.is_taken == true) {
+                    $('#datetimeError').remove()
+                    $('#buttonId').after('<div class="invalid-feedback d-block" id="datetimeError">Время занято</div>')
+                    }
+                    else {
+                    $('#datetimeError').remove()
+                    }
+                },
+                // on error
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response.responseJSON.errors)
+                }
+            });
+            return false;
+    }
+</script>
+
+
+
 {% endblock content %}

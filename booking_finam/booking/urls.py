@@ -1,24 +1,21 @@
 from django.urls import path
 # Импортируем созданное нами представление
 from .views import (
-   BookingList,
    BookingDetail,
    BookingDelete,
-   BookingUpdate,
-   booking
+   booking_update,
+   my_bookings,
+   my_schedule,
+   validate_time_slots
 )
 
 
 urlpatterns = [
-   # path — означает путь.
-   # В данном случае путь ко всем товарам у нас останется пустым,
-   # чуть позже станет ясно почему.
-   # Т.к. наше объявленное представление является классом,
-   # а Django ожидает функцию, нам надо представить этот класс в виде view.
-   # Для этого вызываем метод as_view.
-   path('', BookingList.as_view(), name='booking_list'),
+   path('my_bookings', my_bookings, name='my_booking'),
+   path('my_schedule', my_schedule, name='list_booking'),
    path('<int:pk>', BookingDetail.as_view(), name='booking_detail'),
-   path('create/', booking, name='booking_create'),
-   path('<int:pk>/update/', BookingUpdate.as_view(), name='booking_update'),
+   path('<int:pk>/update/', booking_update, name='booking_update'),
    path('<int:pk>/delete/', BookingDelete.as_view(), name='booking_delete'),
+   path('validate_timeslots', validate_time_slots, name='validate_username')
+   # path('create/', booking, name='choice_booking')
 ]

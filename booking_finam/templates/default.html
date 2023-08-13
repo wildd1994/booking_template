@@ -11,11 +11,28 @@
     </head>
     <body>
         <!-- Responsive navbar-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-           <div class="container">
-               <a class="navbar-brand" href="#">Сервис бронирования</a>
-               <div class="collapse navbar-collapse" id="navbarResponsive">
+        <nav class="navbar navbar-dark bg-dark static-top" style="padding: 10px">
+           <div style="display: flex; justify-content: flex-start">
+               <a class="navbar-brand" href="/booking/my_bookings">Мои бронирования</a>
+               <div class="collapse navbar-collapse" id="my_bookings">
                </div>
+               <a class="navbar-brand" href="/booking/my_schedule">Запись ко мне</a>
+               <div class="collapse navbar-collapse" id="list_booking">
+               </div>
+           </div>
+           <div style="display: flex; justify-content: flex-end">
+               {% if user.is_authenticated %}
+               <a class="navbar-brand" href="/registration/logout">Выход</a>
+               <div class="collapse navbar-collapse" id="logout">
+               </div>
+               {% else %}
+               <a class="navbar-brand" href="/registration/login">Вход</a>
+               <div class="collapse navbar-collapse" id="login">
+               </div>
+               <a class="navbar-brand" href="/registration/signup">Регистрация</a>
+               <div class="collapse navbar-collapse" id="signup">
+               </div>
+               {% endif %}
            </div>
         </nav>
         <!-- Page content-->

@@ -1,0 +1,27 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Бронирование
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+{% block content %}
+<h1>Бронирование</h1>
+
+<div>
+    <label for="who_booking">К кому запись:</label>
+    <p id="who_booking">{{ booking.who_booked }}</p>
+    <label for="date_booking">Дата записи:</label>
+    <p id="date_booking">{{ booking.date_booking|date:"d:m:Y" }}</p>
+    <label for="start_time_booking">Время начала:</label>
+    <p id="start_time_booking">{{ booking.start_time_booking|time:"H:i" }}</p>
+    <label for="end_time_booking">Время окончания:</label>
+    <p id="end_time_booking">{{ booking.end_time_booking|time:"H:i" }}</p>
+    <label for="description">Дополнительные сведения:</label>
+    <p id="description">{{ booking.description }}</p>
+</div>
+<div>
+    <button type="submit" class="btn btn-primary" onclick="document.location='{{booking.id}}/update'" style="justify-content: space-around">Изменить</button>
+    <button type="submit" class="btn btn-primary" onclick="document.location='{{booking.id}}/delete'" style="justify-content: space-around">Удалить</button>
+</div>
+{% endblock content %}

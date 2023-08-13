@@ -1,0 +1,41 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Products
+{% endblock title %}
+
+
+{% block content %}
+{% if bookings %}
+       <table style="display: flex; justify-content: center; border-collapse: collapse; margin-top: 20px">
+           <tr style="font-weight: 500">
+               {% if my_schedule %}
+                   <td style="padding: 3px; border: 1px solid black">Кто записался</td>
+               {% else %}
+                    <td style="padding: 3px; border: 1px solid black; border-radius: 20px">К кому запись</td>
+               {% endif %}
+               <td style="padding: 3px; border: 1px solid black">Дата</td>
+               <td style="padding: 3px; border: 1px solid black">Время начала</td>
+               <td style="padding: 3px; border: 1px solid black">Время окончания</td>
+               <td style="padding: 3px; border: 1px solid black">Описание</td>
+           </tr>
+
+           {% for booking in bookings %}
+           <tr style="text-align: left">
+               {% if my_schedule %}
+                   <td style="padding: 3px; border: 1px solid black">{{ booking.who_booking }}</td>
+               {% else %}
+                    <td style="padding: 3px; border: 1px solid black">{{ booking.who_booked }}</td>
+               {% endif %}
+               <td style="padding: 3px; border: 1px solid black">{{ booking.date_booking|date:"d:m:Y" }}</td>
+               <td style="padding: 3px; border: 1px solid black">{{ booking.start_time_booking|time:"H:i" }}</td>
+               <td style="padding: 3px; border: 1px solid black">{{ booking.end_time_booking|time:"H:i" }}</td>
+               <td style="padding: 3px; border: 1px solid black">{{ booking.description }}</td>
+               <td><button  type="submit" class="btn btn-primary" onclick="document.location='{{booking.id}}'" style="margin-left: 20px; margin-bottom: 5px">Подробности</button><td>
+           </tr>
+           {% endfor %}
+       </table>
+    {% else %}
+       <h2>Записей нет!</h2>
+    {% endif %}
+{% endblock content %}

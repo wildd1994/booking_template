@@ -121,6 +121,8 @@ AUTH_USER_MODEL = 'users.User'
 
 STATIC_URL = 'static/'
 
+LOGIN_REDIRECT_URL = "/booking/my_bookings"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

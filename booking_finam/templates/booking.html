@@ -7,7 +7,16 @@
 
 {% block content %}
 
-<form action="{% url 'booking_create' %}" method="GET">
+<form action="{% url 'choice_booking' %}" method="GET">
+
+    <label for="choise_booked">Выберите к кому записываться:</label>
+
+        <select class="form-select form-select-sm" name="who_booked" id="choise_booked">
+            {% for people in bookings_people%}
+                <option value="{{ people.id }}">{{ people.first_name }} {{ people.last_name }}</option>
+            {% endfor %}
+        </select>
+
 
     <div  style="display: flex; width: 100%; justify-content: center">
         <button type="submit" class="btn btn-primary">Далее</button>
