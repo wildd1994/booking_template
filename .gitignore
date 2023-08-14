@@ -2,3 +2,4 @@
 venv
 *.sqlite3
 .idea
+/booking_finam/.env
