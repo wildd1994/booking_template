@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -26,7 +27,7 @@ class BookingDelete(LoginRequiredMixin, DeleteView):
 def booking_update(request, **kwargs):
     booking_id = kwargs.get('pk')
     booking = Booking.objects.get(pk=booking_id)
-    if booking.who_booking.pk != request.user.pk:
+    if booking.who_booking.pk != request.user.pk and booking.who_booked.pk != request.user.pk:
         return render(request, '403.html', {})
     if not request.user.is_authenticated:
         return render(request, '403.html', {})
@@ -48,6 +49,8 @@ def booking_update(request, **kwargs):
         f = BookingForm(data=data, instance=booking)
         if f.is_valid():
             f.save()
+            # это можно через селери сделать
+            send_message(f.instance, 'change')
             return HttpResponseRedirect(booking.get_absolute_url())
         else:
             return render(request, "booking_edit.html", {'booking': booking, 'errors': f.errors})
@@ -154,3 +157,21 @@ def check_time(bookings, time_start, time_end) -> bool:
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+
+def send_message(instance, action):
+    url = instance.get_absolute_url()
+    if action == 'change':
+        subject = 'Изменение в бронировании!'
+        msg = (f'{instance.who_booking.username}, одно из бронирований изменено!\n\n'
+               f'http://127.0.0.1:8000{url}')
+    else:
+        subject = 'Новое бронирование!'
+        msg = (f'{instance.who_booking.username}, у вас новое бронирование!\n\n'
+               f'http://127.0.0.1:8000{url}')
+    send_mail(
+        subject=subject,
+        message=msg,
+        from_email=None,
+        recipient_list=[instance.who_booking.email, instance.who_booked.email],
+    )
