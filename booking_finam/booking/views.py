@@ -86,6 +86,44 @@ def my_schedule(request):
     return render(request, '403.html', dict_obj)
 
 
+def create_booking(request):
+    if not request.user.is_authenticated:
+        dict_obj = {
+            'reason': 'Необходимо зарегистрироваться'
+        }
+        return render(request, '403.html', dict_obj)
+    if request.POST:
+        who_booked = request.POST.get('who_booked')
+        who_booking = request.user.pk
+        date_booking = request.POST.get('date_booking')
+        time_start = request.POST.get('start_time_booking')
+        time_end = request.POST.get('end_time_booking')
+        description = request.POST.get('description')
+        data = {
+            'who_booked': who_booked,
+            'who_booking': who_booking,
+            'date_booking': date_booking,
+            'start_time_booking': time_start,
+            'end_time_booking': time_end,
+            'description': description
+        }
+        f = BookingForm(data=data)
+        if f.is_valid():
+            f.save()
+            # это можно через селери сделать
+            send_message(f.instance, 'create')
+            return HttpResponseRedirect(f.instance.get_absolute_url())
+        else:
+            return render(request, "booking_edit.html", {'booking': f.instance, 'errors': f.errors})
+    else:
+        users_booked = User.objects.filter(booking_field='booked')
+        dict_obj = {
+            'bookings_people': users_booked,
+            'today': datetime.today().strftime('%Y-%m-%d')
+        }
+        return render(request, "booking_edit.html", dict_obj)
+
+
 def my_bookings(request):
     if request.user.is_authenticated:
         user_id = request.user.pk
@@ -110,26 +148,20 @@ def validate_time_slots(request):
                 'errors': 'Отсутствует время старта',
                 'status': 'false'
             }
-            return JsonResponse(response,  status=500)
+            return JsonResponse(response,  status=404)
         time_end = request.GET.get('end_time_booking')
         if not time_end:
             response = {
                 'errors': 'Отсутствует время окончания',
                 'status': 'false'
             }
-            return JsonResponse(response, status=500)
+            return JsonResponse(response, status=404)
         user = request.GET.get('who_booked', None)
         booking_pk = request.GET.get('booking_id')
-        print(type(booking_pk))
-        try:
-            booking_pk = int(booking_pk)
-        except Exception as e:
-            response = {
-                'errors': e,
-                'status': 'false'
-            }
-            return JsonResponse(response, status=500)
-        bookings = Booking.objects.filter(who_booked=user, date_booking=date_booking).exclude(pk=booking_pk)
+        if booking_pk:
+            bookings = Booking.objects.filter(who_booked=user, date_booking=date_booking).exclude(pk=booking_pk)
+        else:
+            bookings = Booking.objects.filter(who_booked=user, date_booking=date_booking)
         is_taken = check_time(bookings, time_start, time_end)
         response = {
             'is_taken': is_taken
