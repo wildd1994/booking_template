@@ -18,12 +18,14 @@ class MyCreationForm(UserCreationForm):
             'first_name',
             'last_name',
             'booking_field',
-            'second_name'
+            'second_name',
+            'username'
         ]
         labels = {
             'email': _("Электронная почта"),
             'first_name': _('Имя'),
             'last_name': _('Фамилия'),
             'second_name': _('Отчество'),
-            'booking_field': _('Выбор услуги')
+            'booking_field': _('Выбор услуги'),
+            'username': _('Логин')
         }

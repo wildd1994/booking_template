@@ -10,3 +10,4 @@ MY_CHOICES = (
 class User(AbstractUser):
     booking_field = models.CharField(choices=MY_CHOICES, blank=False, max_length=7)
     second_name = models.CharField(blank=True, max_length=50)
+    username = models.CharField(blank=False, unique=True, max_length=50)
