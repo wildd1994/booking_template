@@ -1,4 +1,6 @@
 from django import forms
+from django.core.exceptions import ValidationError
+
 from .models import Booking
 
 
@@ -18,3 +20,14 @@ class BookingForm(forms.ModelForm):
             'end_time_booking',
             'description'
         ]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        time_start = cleaned_data.get("start_time_booking")
+        time_end = cleaned_data.get("end_time_booking")
+        if time_start > time_end:
+            raise ValidationError({
+                "end_time_booking": "Время окончания не может быть меньше времени начала."
+            })
+
+        return cleaned_data
