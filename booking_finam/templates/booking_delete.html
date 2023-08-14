@@ -1,0 +1,14 @@
+{% extends 'default.html' %}
+
+{% block content %}
+<div>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+            <p style="display: flex; justify-content: center">Вы уверены?</p>
+            <button  type="submit" class="btn btn-primary" style="margin-bottom: 5px; margin-top: 5px">Удалить</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

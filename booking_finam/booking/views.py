@@ -20,7 +20,7 @@ class BookingDetail(LoginRequiredMixin, DetailView):
 
 class BookingDelete(LoginRequiredMixin, DeleteView):
     model = Booking
-    template_name = 'booking_edit.html'
+    template_name = 'booking_delete.html'
     success_url = reverse_lazy('list_booking')
 
 
