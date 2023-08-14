@@ -37,7 +37,7 @@
             <textarea class="form-control" rows="5" id="description" name="description">{{ booking.description }}</textarea>
             {{ errors.description }}
         </p>
-        <button  id="buttonId" type="submit" class="btn btn-primary">Изменить</button>
+        <button  id="buttonId" type="submit" class="btn btn-primary">Сохранить</button>
     </form>
 </div>
 <input type="hidden" id="booking_id" name="booking_id" value="{{ booking_id }}" />
@@ -86,9 +86,11 @@
                     if (response.is_taken == true) {
                     $('#datetimeError').remove()
                     $('#buttonId').after('<div class="invalid-feedback d-block" id="datetimeError">Время занято</div>')
+                    $('#buttonId').prop("disabled", true)
                     }
                     else {
                     $('#datetimeError').remove()
+                    $('#buttonId').prop("disabled", false)
                     }
                 },
                 // on error
